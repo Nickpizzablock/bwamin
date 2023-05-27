@@ -35,7 +35,7 @@ def sortFqFile(fqFile):
         line = reader.readline().strip()
         while line != '':
 
-            name = line
+            name = line.strip('@')
             line = reader.readline().strip()
 
             seq = line
@@ -45,7 +45,17 @@ def sortFqFile(fqFile):
             score = line
             line = reader.readline()
 
-            seqScore.append(list(zip(seq, score)))
-            reads[name] = seqScore
+            # seqScore.append(list(zip(seq, score)))
+            # reads[name] = seqScore
+            reads[name] = (seq,score)
+
     return reads
             
+def alignThem(ref, read):
+    for i in range(len(ref[1]) - len(read[1][0]) + 1):
+        if ref[1][i:len(read[1][0])+i] == read[1][0]:
+            return True
+    # print(ref)
+    # print(read)
+
+# def align

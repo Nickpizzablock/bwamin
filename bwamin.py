@@ -19,7 +19,7 @@ parser.add_argument('--index', action="store_true", help='index a fasta file')
 parser.add_argument('--mem', action="store_true", help='index a fasta file')
 
 # My options
-parser.add_argument('file', type=str, help="fasta input")
+parser.add_argument('fastq', type=str, help="fasta input")
 parser.add_argument('fastq', type=str, help="fastq input")
 
 
@@ -56,22 +56,38 @@ if optionsList.count(True) != 1:
 
 # File checking
 faFile = ''
-if not os.path.exists(args.file):
+if not os.path.exists(args.fastq):
     print("ERROR: First file not found")
     raise False
 else:
-    faFile = args.file
+    faFile = args.fastq
 
 faOut = align.alignGenome(faFile)
-print(faOut)
+# print(faOut)
 
 fqOut = ''
 if os.path.exists(args.fastq):
     fqFile = args.fastq
     fqOut = align.sortFqFile(fqFile)
-    print(fqOut)
+    # print(fqOut)
+
+# For each read, look at each chromsome and find the best score
 
 
+for i in fqOut:
+    # genomeScores = []
+    for j in faOut:
+        # genomeScores.append(align.alignThem(j, i))
+        if align.alignThem((j, faOut[j]), (i, fqOut[i])):
+            print("there is a match")
+        # exit()
+    # bestScore = max(genomeScores)
+    # samOut.append(bestScore)
+
+# Writing the contents out
+# with open("output.sam", "w") as writer:
+#     for i in samOut:
+#         writer.write(i)
 # print(optionsList.count(True))
 # parser.add_argument("index", type=int, required=True, help="match val")
 # parser.add_argument("mem", type=int, required=True, help="mismatch val")
