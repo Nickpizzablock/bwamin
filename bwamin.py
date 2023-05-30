@@ -45,8 +45,6 @@ if optionsList.count(True) != 1:
 
 # File checking
 # Note: Should I add a .fa and .fq checker? bc txt should be fine
-
-faFile = ''
 if not os.path.exists(args.fasta):
     print("ERROR: Fasta file invalid")
     raise OSError()
@@ -59,19 +57,11 @@ if not os.path.exists(args.fastq):
 else:
     fqFile = args.fastq
 
-# faOut = Fasta(faFile)
-faOut = align.alignGenome(faFile)
-# print(faOut)
-
-fqOut = ''
-if os.path.exists(args.fastq):
-    fqFile = args.fastq
-    fqOut = align.sortFqFile(fqFile)
-    # print(fqOut)
+# Reading Fasta and fastq
+faOut = Fasta(faFile)
+fqOut = align.sortFqFile(fqFile)
 
 # For each read, look at each chromsome and find the best score
-
-
 for i in fqOut:
     # genomeScores = []
     for j in faOut:
