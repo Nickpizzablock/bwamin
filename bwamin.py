@@ -1,14 +1,5 @@
-"""
-Notes:
-Do mem portion. Prob not do index.
-
-I need to have a package done by friday night
-
-
-"""
-
-
 import os, argparse
+from pyfaidx import Fasta
 import align
 
 # Parser
@@ -19,10 +10,8 @@ parser.add_argument('--index', action="store_true", help='index a fasta file')
 parser.add_argument('--mem', action="store_true", help='index a fasta file')
 
 # My options
-parser.add_argument('fastq', type=str, help="fasta input")
+parser.add_argument('fasta', type=str, help="fasta input")
 parser.add_argument('fastq', type=str, help="fastq input")
-
-
 
 # Mem options (Found in bwa mem help)
 # parser.add_argument('-t', type=int, default=1, help="number of threads [1]")
@@ -51,17 +40,26 @@ args = parser.parse_args()
 # Check if only 1 option is selected (-h still works here)
 optionsList = [args.index, args.mem]
 if optionsList.count(True) != 1:
-    print('ERROR: Too many / few arguments')
+    print('ERROR: Only pick index or mem')
     raise False
 
 # File checking
-faFile = ''
-if not os.path.exists(args.fastq):
-    print("ERROR: First file not found")
-    raise False
-else:
-    faFile = args.fastq
+# Note: Should I add a .fa and .fq checker? bc txt should be fine
 
+faFile = ''
+if not os.path.exists(args.fasta):
+    print("ERROR: Fasta file invalid")
+    raise OSError()
+else:
+    faFile = args.fasta
+
+if not os.path.exists(args.fastq):
+    print("ERROR: Fastq file invalid")
+    raise OSError()
+else:
+    fqFile = args.fastq
+
+# faOut = Fasta(faFile)
 faOut = align.alignGenome(faFile)
 # print(faOut)
 
