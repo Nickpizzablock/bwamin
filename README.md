@@ -26,7 +26,7 @@ python bwamin.py [options] [.fa] [.fq]
 
 A test example is:
 ```
-python3 bwamin.py testfastring.fa testfqstring.fq
+python3 bwamin.py --mem testfastring.fa testfqstring.fq
 ```
 where `testfastring.fa` and `testfqstring.fq` can be replaced with your own `.fa` and `.fq` files.
 
@@ -35,7 +35,7 @@ Under development. Currently, this only checks for exact matches from .fq onto .
 
 # Bwamin Options
 ## Note
-Options are in progress.
+Must choose between `--index` or `--mem` but they don't change the output for now.
 
 # File Format
 Currently, no file is output.
