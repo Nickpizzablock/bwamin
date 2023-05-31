@@ -59,12 +59,17 @@ else:
 
 # Reading Fasta and fastq
 faOut = Fasta(faFile)
+# for each in faOut.keys():
+#     print(each)
+#     print(faOut[each])
+
+# exit()
 fqOut = align.sortFqFile(fqFile)
 
 # For each read, look at each chromsome and find the best score
 for i in fqOut:
     # genomeScores = []
-    for j in faOut:
+    for j in faOut.keys():
         # genomeScores.append(align.alignThem(j, i))
         if align.alignThem((j, faOut[j]), (i, fqOut[i])):
             print("there is a match")

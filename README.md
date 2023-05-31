@@ -5,6 +5,10 @@ Ramen with a 'bw'. This is an demonstation project which implements an aligner t
 Please install the 'pyfaidx' library using:
 
 ```
+# For Mac
+pip3 install pyfaidx
+
+# For Other OS
 pip install pyfaidx
 ```
 
@@ -12,10 +16,14 @@ Currently, this is a command line tool. No installation for now.
 
 # Basic Usage
 An example is the following:
-
 ```
+# For Mac
 python3 bwamin.py [options] [.fa] [.fq]
+
+# For Other OS
+python bwamin.py [options] [.fa] [.fq]
 ```
+
 A test example is:
 ```
 python3 bwamin.py testfastring.fa testfqstring.fq
