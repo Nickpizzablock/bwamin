@@ -66,6 +66,8 @@ faOut = Fasta(faFile)
 # exit()
 fqOut = align.sortFqFile(fqFile)
 
+# print(faOut)
+# exit()
 # Stating Alignment settings
 match = args.A
 mismatch = args.B
