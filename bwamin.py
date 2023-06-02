@@ -83,12 +83,17 @@ print('indel weight: ' + str(indel))
 print('gapPenalty: ' + str(gapPenalty))
 
 bestAlignments = {}
+# print(faOut.keys(faOut.keys[0]))
+# for i in faOut.keys():
+#     print(faOut[i])
+# exit()
 # For each read, look at each chromsome and find the best score
 zenith = open('zenith.txt','w')
 
 # Making the header on zenith
 # https://samtools.github.io/hts-specs/SAMv1.pdf
-# zenith.write(sambuild.sq())
+for i in faOut.keys():
+    zenith.write(sambuild.sq(i, len(faOut[i]), ''))
 # zenith.write(sambuild.hd())
 # zenith.write(sambuild.pg())
 

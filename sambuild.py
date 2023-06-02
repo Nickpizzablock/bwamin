@@ -1,8 +1,8 @@
 # Note how to detect integer or float to string?
 def hd(formatVersion, sortingOrder):
-    return '@HD\tVN:' + formatVersion + '\tSO:' + sortingOrder + '\n'
+    return '@HD\tVN:' + str(formatVersion) + '\tSO:' + sortingOrder + '\n'
 def sq(refName, refLength, refAssembly):
-    return '@SQ\tSN:' + refName + '\tLN:' + refLength + '\tAS:' + refAssembly + '\n'
+    return '@SQ\tSN:' + refName + '\tLN:' + str(refLength) + '\tAS:' + refAssembly + '\n'
 def rg(groupId, platform):
     return '@RG\tID:' + groupId + '\tPL:' + platform + '\n'
 def pg(programId, programName, programVersion):

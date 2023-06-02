@@ -1,6 +1,7 @@
 # Note: should we have binary compression at least?
 # 
 
+# Deprecated - Old .fa parser
 def alignGenome(faFile):
     print("Enering align.py")
 
