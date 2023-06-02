@@ -95,10 +95,12 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel):
     # print(read[0])
     ref = '-' + str(refStage)
     read = '-' + readStage[0]
-    print(ref)
-    print(len(ref))
-    print(read)
-    print(len(read))
+    
+    # variable print block
+    # print(ref)
+    # print(len(ref))
+    # print(read)
+    # print(len(read))
 
     # Array prep
     array = [[(0) for h in range(len(ref))] for g in range(len(read))]
@@ -112,13 +114,15 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel):
         # array[i][0] = -i
         backArray[i][0] = 3
 
-    print(array)
+    # print(array) # Printing initial 0'ed array
     for i in range(1,len(read)):
         for j in range(1,len(ref)):
+
+            # Debug block
             # print('diag: ' + str(array[i-1][j-1]))
             # print('up: ' + str(array[i-1][j]))
             # print('left: ' + str(array[i][j-1]))
-            print('comparing: ' + ref[j] +' and ' + read[i])
+            # print('comparing: ' + ref[j] +' and ' + read[i]) #compare letters
             if ref[j] == read[i]:
                 diag = array[i-1][j-1] + match
             elif ref[j] == '-' or read[i] == '-':
@@ -131,12 +135,14 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel):
             array[i][j] = max(scores)
             backArray[i][j] = scores.index(max(scores))
             
-            print(scores)
-            print('score: ' + str(array[i][j]))
+            # Print block updated score per 
+            # print(scores)
+            # print('score: ' + str(array[i][j]))
             # exit()
 
     # Backtrack
     # Going backwards through reversed
+    # Note refs always bigger than read, fill in '-'
     alignment = []
     for i in reversed(range(1,len(read))):
         for j in reversed(range(1,len(ref))):
@@ -151,6 +157,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel):
                 # find suffix
                 if isave != len(read):
                     suffix[0] = read[isave+1:]
+                    # suffix[0] = read[jsave+1:] # because len(ref) > read
                 if jsave != len(ref):
                     suffix[1] = ref[jsave+1:]
 
@@ -183,16 +190,21 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel):
 
                 string[0] = prefix[0] + string[0] + suffix[0]
                 string[1] = prefix[1] + string[1] + suffix[1]
+                diff = len(string[1]) - len(string[0]) #suffix match
+                string[0] = string[0] + '-' * diff
 
                 alignment.append([score, string])
                 # print('dubz')
     # print(array)
-    print(alignment)
     best = maxAlignment(alignment)
-    print(best)
+    # print(alignment)
+
+    # print(best)
     # exit()
-    printArray(array, 'array')
-    printArray(backArray, 'backarray')
+
+    #printArray block for visualizing the score and backarray
+    # printArray(array, 'array')
+    # printArray(backArray, 'backarray')
     # printBackArray(backArray, 'backarray')
     return best
     # exit()
