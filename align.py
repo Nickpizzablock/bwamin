@@ -163,7 +163,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
                     suffix[1] = ref[jsave+1:]
 
                 while True:
-                    # score += array[isave][jsave] # old score but i think wrong
+                    score += array[isave][jsave] # old score but i think wrong
                     if backArray[isave][jsave] == 0:
                         string[0] = read[isave] + string[0]
                         string[1] = ref[jsave] + string[1]

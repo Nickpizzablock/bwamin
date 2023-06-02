@@ -77,6 +77,7 @@ print('Alignment Settings')
 print('match weight: ' + str(match))
 print('mismatch weight: ' + str(mismatch))
 print('indel weight: ' + str(indel))
+print('gapPenalty: ' + str(gapPenalty))
 
 bestAlignments = {}
 # For each read, look at each chromsome and find the best score
