@@ -151,9 +151,9 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
 
                 # find suffix
                 if isave != len(read):
-                    suffix[0] = read[isave:]
+                    suffix[0] = read[isave+1:]
                 if jsave != len(ref):
-                    suffix[1] = ref[jsave:]
+                    suffix[1] = ref[jsave+1:]
 
                 while True:
                     # score += array[isave][jsave] # old score but i think wrong
