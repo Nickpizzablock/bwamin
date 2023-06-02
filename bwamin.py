@@ -82,6 +82,14 @@ print('gapPenalty: ' + str(gapPenalty))
 bestAlignments = {}
 # For each read, look at each chromsome and find the best score
 zenith = open('zenith.txt','w')
+
+# Making the header on zenith
+# https://samtools.github.io/hts-specs/SAMv1.pdf
+# zenith.write(sambuild.sq())
+# zenith.write(sambuild.hd())
+# zenith.write(sambuild.pg())
+
+
 for i in fqOut:
     # genomeScores = []
     for j in faOut.keys():
@@ -90,7 +98,6 @@ for i in fqOut:
         #     print("there is a match")
         bestAlignments[j] = align.nwAlgo(j, faOut[j], i, fqOut[i], match, mismatch, indel, gapPenalty)
         zenith.write(sambuild.readToString(i, "flag", j, "leftpos", "quality", "cigar", "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
-        zenith.write("\n")
         # zenith.write('hi\thi')
 
         # exit()
