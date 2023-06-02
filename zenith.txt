@@ -1,0 +1,1 @@
+Sample1	flag	chr1	leftpos	quality	cigar	rnext	pnext	tlen	TCAT	!1=D

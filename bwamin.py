@@ -1,6 +1,6 @@
 import os, argparse
 from pyfaidx import Fasta
-import align
+import align, sambuild
 
 # Parser
 parser = argparse.ArgumentParser(description='minimum bwa')
@@ -24,7 +24,7 @@ parser.add_argument('fastq', type=str, help="fastq input")
 parser.add_argument('-A', type=int,	default=1, help="Matching score. [1]")
 parser.add_argument('-B', type=int,	default=4, help="Mismatch penalty. The sequence error rate is approximately: {.75 * exp[-log(4) * B/A]}. [4]")
 parser.add_argument('-O', type=int,	default=6, help="Gap open penalty. [6]")
-# parser.add_argument('-E', type=int,	default=1, help="Gap extension penalty. A gap of length k costs O + k*E (i.e. -O is for opening a zero-length gap). [1]")
+parser.add_argument('-E', type=int,	default=1, help="Gap extension penalty. A gap of length k costs O + k*E (i.e. -O is for opening a zero-length gap). [1]")
 # parser.add_argument('-L', type=int,	default=5, help="Clipping penalty. When performing SW extension, BWA-MEM keeps track of the best score reaching the end of query. If this score is larger than the best SW score minus the clipping penalty, clipping will not be applied. Note that in this case, the SAM AS tag reports the best SW score; clipping penalty is not deducted. [5]")
 # parser.add_argument('-U', type=int,	default=9, help="Penalty for an unpaired read pair. BWA-MEM scores an unpaired read pair as scoreRead1+scoreRead2-INT and scores a paired as scoreRead1+scoreRead2-insertPenalty. It compares these two scores to determine whether we should force pairing. [9]")
 # parser.add_argument('-p', help="Assume the first input query file is interleaved paired-end FASTA/Q. See the command description for details.")
@@ -72,6 +72,7 @@ fqOut = align.sortFqFile(fqFile)
 match = args.A
 mismatch = args.B
 indel = args.O
+gapPenalty = args.E
 print('Alignment Settings')
 print('match weight: ' + str(match))
 print('mismatch weight: ' + str(mismatch))
@@ -79,13 +80,18 @@ print('indel weight: ' + str(indel))
 
 bestAlignments = {}
 # For each read, look at each chromsome and find the best score
+zenith = open('zenith.txt','w')
 for i in fqOut:
     # genomeScores = []
     for j in faOut.keys():
         # genomeScores.append(align.alignThem(j, i))
         # if align.alignThem((j, faOut[j]), (i, fqOut[i])):
         #     print("there is a match")
-        bestAlignments[j] = align.nwAlgo(j, faOut[j], i, fqOut[i], match, mismatch, indel)
+        bestAlignments[j] = align.nwAlgo(j, faOut[j], i, fqOut[i], match, mismatch, indel, gapPenalty)
+        zenith.write(sambuild.readToString(i, "flag", j, "leftpos", "quality", "cigar", "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+        zenith.write("\n")
+        # zenith.write('hi\thi')
+
         # exit()
     # bestScore = max(genomeScores)
     # samOut.append(bestScore)
@@ -97,5 +103,12 @@ for i in fqOut:
 # print(optionsList.count(True))
 # parser.add_argument("index", type=int, required=True, help="match val")
 # parser.add_argument("mem", type=int, required=True, help="mismatch val")
+zenith.close()
+zenith = open('zenith.txt','r')
+print('----------ZenithFile-----------')
+print(zenith.read())
+print('----------ZenithFile-----------')
+
+
 print(bestAlignments)
 print('hellowaorld')
