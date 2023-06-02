@@ -89,7 +89,7 @@ def maxAlignment(align):
             maxAlign = i[1]
     return [maxVal, maxAlign]
 
-def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel):
+def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
     # Note: read is a tuple, [0] is the letters
     # Set up array
     # print(read[0])
@@ -145,6 +145,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel):
                 string = ['',''] # index 0 is read 1 is ref
                 prefix = ['','']
                 suffix = ['','']
+                gapCount = 0
                 isave = i
                 jsave = j
 
@@ -155,24 +156,33 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel):
                     suffix[1] = ref[jsave:]
 
                 while True:
-                    score += array[isave][jsave]
+                    # score += array[isave][jsave] # old score but i think wrong
                     if backArray[isave][jsave] == 0:
                         string[0] = read[isave] + string[0]
                         string[1] = ref[jsave] + string[1]
                         backArray[isave][jsave] = 3
                         isave -= 1
                         jsave -= 1
+                        score += match #score maybe
+                        score -= gapCount * gapPenalty
+                        gapCount = 0
                     elif backArray[isave][jsave] == 1:
                         string[0] = read[isave] + string[0]
                         string[1] = '-' + string[1]
                         backArray[isave][jsave] = 3
                         isave -= 1
+                        score -= indel #score maybe
+                        gapCount += 1
                     else:
                         backArray[isave][jsave] = 3
                         string[0] = '-' + string[0]
                         string[1] = ref[jsave] + string[1]
                         jsave -= 1
+                        score -= indel #score maybe
+                        gapCount += 1
                     if backArray[isave][jsave] == 3:
+                        score -= gapCount * gapPenalty
+                        gapCount = 0
                         break
                 
                 # find prefix
