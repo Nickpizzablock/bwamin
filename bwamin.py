@@ -2,6 +2,9 @@ import os, argparse
 from pyfaidx import Fasta
 import align, sambuild
 
+# python bwamin.py --index -A 1 -B 1 -O 1 -E 1 short.fa short.fq > output.txt
+# python bwamin.py --index -A 1 -B 1 -O 1 -E 1 testfastring.fa testfqstring.fq > output.txt
+
 # Parser
 parser = argparse.ArgumentParser(description='minimum bwa')
 
