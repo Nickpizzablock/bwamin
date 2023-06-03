@@ -1,4 +1,4 @@
-import os, argparse
+import os, argparse, sys
 from pyfaidx import Fasta
 import align, sambuild
 
@@ -81,7 +81,8 @@ print('match weight: ' + str(match))
 print('mismatch weight: ' + str(mismatch))
 print('indel weight: ' + str(indel))
 print('gapPenalty: ' + str(gapPenalty))
-
+# print(sys.argc)
+# exit()
 bestAlignments = {}
 # print(faOut.keys(faOut.keys[0]))
 # for i in faOut.keys():
@@ -94,10 +95,13 @@ zenith = open('zenith.txt','w')
 # https://samtools.github.io/hts-specs/SAMv1.pdf
 for i in faOut.keys():
     zenith.write(sambuild.sq(i, len(faOut[i]), ''))
-# zenith.write(sambuild.hd())
-# zenith.write(sambuild.pg())
+zenith.write(sambuild.hd('1.5', 'unsorted', 'query'))
+command = 'python'
+for i in sys.argv:
+    command = command + ' ' + i
+zenith.write(sambuild.pg('bwamin', 'bwamin', '0.001-alpha', command))
 
-
+# Making the reads list on zenith
 for i in fqOut:
     # genomeScores = []
     for j in faOut.keys():
