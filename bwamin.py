@@ -109,7 +109,9 @@ for i in fqOut:
         # if align.alignThem((j, faOut[j]), (i, fqOut[i])):
         #     print("there is a match")
         bestAlignments[j] = align.nwAlgo(j, faOut[j], i, fqOut[i], match, mismatch, indel, gapPenalty)
-        zenith.write(sambuild.readToString(i, "flag", j, "leftpos", "quality", "cigar", "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+
+        # Note: flag = 0 since only single reads
+        zenith.write(sambuild.readToString(i, 'flag', j, bestAlignments[j][2], "quality", bestAlignments[j][3], "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
         # zenith.write('hi\thi')
 
         # exit()

@@ -13,7 +13,7 @@ def co(text):
 #Note  will we need to format something?
 def readToString(readName, flag, refName, leftPos, quality, cigar, nextReadName, nextReadPos, templateLength, seq, qual):
     out = ''
-    for i in [readName, flag, refName, leftPos, quality, cigar, nextReadName, nextReadPos, templateLength, seq]:
+    for i in [readName, str(flag), refName, str(leftPos), quality, cigar, nextReadName, nextReadPos, templateLength, seq]:
         out = out + i +'\t'
     out = out + qual
     return out + '\n'

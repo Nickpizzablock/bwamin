@@ -82,13 +82,37 @@ def printBackArray(backArray, title):
     
 def maxAlignment(align):
     maxVal = -1 # This could bean issue TODO: -------------------------------------
-    maxAlign = []
-    for i in align:
+    # maxAlign = []
+    # maxPos = -1
+    maxIndex = -1
+    for i in range(len(align)):
         # print(i[0])
-        if i[0] > maxVal:
-            maxVal = i[0]
-            maxAlign = i[1]
-    return [maxVal, maxAlign]
+        if align[i][0] > maxVal:
+            # maxVal = i[0]
+            # maxAlign = i[1]
+            # maxPos = i[2]
+            maxVal = align[i][0]
+            maxIndex = i
+    # return [maxVal, maxAlign, maxPos]
+    # print('maxindex; ' + str(i))
+    return align[maxIndex]
+
+def stringToCigar(string):
+    #Note: do we need to consider ref and read deletions
+    lastLetter = string[0]
+    counter = 0
+    output = ''
+    for i in string:
+        if i != lastLetter:
+            output = output + str(counter) + lastLetter
+            counter = 1
+            lastLetter = i
+        else:
+            counter += 1
+        # lastLetter = i
+    output = output + str(counter) + lastLetter
+    return output
+    
 
 def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
     # Note: read is a tuple, [0] is the letters
@@ -144,6 +168,8 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
     # Backtrack
     # Going backwards through reversed
     # Note refs always bigger than read, fill in '-'
+
+    #Note: deleted suffix and prefix to save space
     alignment = []
     for i in reversed(range(1,len(read))):
         for j in reversed(range(1,len(ref))):
@@ -152,6 +178,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
                 string = ['',''] # index 0 is read 1 is ref
                 prefix = ['','']
                 suffix = ['','']
+                cigar = ''
                 gapCount = 0
                 isave = i
                 jsave = j
@@ -174,6 +201,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
                         score += match #score maybe
                         score -= gapCount * gapPenalty
                         gapCount = 0
+                        cigar = 'M' + cigar
                     elif backArray[isave][jsave] == 1:
                         string[0] = read[isave] + string[0]
                         string[1] = '-' + string[1]
@@ -181,6 +209,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
                         isave -= 1
                         score -= indel #score maybe
                         gapCount += 1
+                        cigar = 'I' + cigar
                     else:
                         backArray[isave][jsave] = 3
                         string[0] = '-' + string[0]
@@ -188,6 +217,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
                         jsave -= 1
                         score -= indel #score maybe
                         gapCount += 1
+                        cigar = 'D' + cigar
                     if backArray[isave][jsave] == 3:
                         score -= gapCount * gapPenalty
                         gapCount = 0
@@ -204,10 +234,14 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
                 diff = len(string[1]) - len(string[0]) #suffix match
                 string[0] = string[0] + '-' * diff
 
-                alignment.append([score, string])
+                #LeftPos = isave
+                # print(cigar)
+                cigar = stringToCigar(cigar)
+                alignment.append([score, string, isave, cigar])
                 # print('dubz')
     # print(array)
     best = maxAlignment(alignment)
+    # print(best)
     # print(alignment)
 
     # print(best)

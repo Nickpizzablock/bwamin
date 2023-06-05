@@ -1,4 +1,4 @@
-# bwamin (SCE185 Project Deno)
+# bwamin (CSE185 Project Deno)
 Ramen with a 'bw'. This is an demonstation project which implements an aligner that takes in `.fa `and `.fq` files and aligns them to output a `.sam` file. This will go against `bwa index` and `bwa min` seen in class. The bwa Github Repo can be accessed [here.](https://github.com/lh3/bwa) 
 
 # Installation Prosedure
