@@ -14,6 +14,7 @@ much smaller but 1.9Gbases
 !!!
 
 https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR10769501&display=download
-5.1Mbases
+5.1Mbases This is kinda ok
 
 still too large, im just using the samples
+cant use the samples, no fastq files

@@ -5,6 +5,8 @@ import align, sambuild, bwt
 # python bwamin.py --index -A 1 -B 1 -O 1 -E 1 short.fa short.fq > output.txt
 # python bwamin.py --index -A 1 -B 1 -O 1 -E 1 testfastring.fa testfqstring.fq > output.txt
 
+# python bwamin.py --index --bwt -A 1 -B 1 -O 1 -E 1 .\benchmark\mydata\SRR10769501.fasta.fixed .\benchmark\mydata\SRR10769501.fastq
+
 # Parser
 parser = argparse.ArgumentParser(description='minimum bwa')
 
@@ -62,7 +64,7 @@ if not os.path.exists(args.fastq):
 else:
     fqFile = args.fastq
 
-if args.index:
+if args.index and args.bwt:
     bwtindex = open(faFile + '.myindex','w')
     faOut = Fasta(faFile)
     for j in faOut.keys():
