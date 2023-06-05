@@ -91,11 +91,11 @@ def find(bwtstring, w): #w is query
 
 
 # b = input('Transform what?: ')
-b = "BANANA"
-c = bwt(b)
-# e = addl2f(c)
-# print(c)
-# print(e)
-f = rebuildbwt(c)
-print(f)
-print(find(c, 'Q'))
+# b = "BANANA"
+# c = bwt(b)
+# # e = addl2f(c)
+# # print(c)
+# # print(e)
+# f = rebuildbwt(c)
+# print(f)
+# print(find(c, 'Q'))

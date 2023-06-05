@@ -241,7 +241,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
                 # print('dubz')
     # print(array)
     best = maxAlignment(alignment)
-    print(best)
+    # print(best)
     # print(alignment)
 
     # print(best)
