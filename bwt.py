@@ -1,3 +1,4 @@
+import align
 # Use more compression align vcompress to cigar
 def bwt(string):
     bwtlist = []
@@ -12,6 +13,9 @@ def bwt(string):
         last = last + i[-1]
     return last
 
+def bwtEnhanced(string):
+    string = bwt(string)
+    return align.stringToCigar(string)
 
 
 def addl2f(last):
@@ -49,8 +53,8 @@ def rebuildbwt(last):
     return original
 
 def find(bwtstring, w): #w is query
-    print('bwtstring: ' + bwtstring)
-    print('query: ' + w)
+    # print('bwtstring: ' + bwtstring)
+    # print('query: ' + w)
     
     # bwtstring = bwtstring + '$'
 
@@ -65,23 +69,23 @@ def find(bwtstring, w): #w is query
     bottom = n - 1
     offset = 0
     # print(bwtstring[top:bottom])
-    print(n)
+    # print(n)
     for c in w[::-1]:
-        print(c)
-        print('look: ' + bwtstring[top:bottom + 1])
+        # print(c)
+        # print('look: ' + bwtstring[top:bottom + 1])
         # exit()
         if c not in bwtstring[top:bottom+ 1]:
-            return 'String Butt' #w does not exist
+            return None #w does not exist
         i = bwtstring[top:bottom+ 1].find(c) + offset
         j = len(bwtstring[top:bottom+ 1]) - 1 - bwtstring[top:bottom+ 1][::-1].find(c) + offset
-        print(i, j)
+        # print(i, j)
         # print(bwtstring[top:bottom][::-1])
-        print(l2f)
+        # print(l2f)
         # exit()
         top = l2f[i]
         bottom = l2f[j]
         offset = top
-        print(top, bottom)
+        # print(top, bottom)
     # return all positions in original string corresponding to first[top,bottom]
     return first[top:bottom+1]
 
@@ -94,4 +98,4 @@ c = bwt(b)
 # print(e)
 f = rebuildbwt(c)
 print(f)
-print(find(c, 'NANA'))
+print(find(c, 'Q'))

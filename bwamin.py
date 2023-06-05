@@ -1,6 +1,6 @@
 import os, argparse, sys
 from pyfaidx import Fasta
-import align, sambuild
+import align, sambuild, bwt
 
 # python bwamin.py --index -A 1 -B 1 -O 1 -E 1 short.fa short.fq > output.txt
 # python bwamin.py --index -A 1 -B 1 -O 1 -E 1 testfastring.fa testfqstring.fq > output.txt
@@ -11,6 +11,8 @@ parser = argparse.ArgumentParser(description='minimum bwa')
 # Tool options
 parser.add_argument('--index', action="store_true", help='index a fasta file')
 parser.add_argument('--mem', action="store_true", help='index a fasta file')
+parser.add_argument('--bwt', action="store_true", help='enables bwt search')
+
 
 # My options
 parser.add_argument('fasta', type=str, help="fasta input")
@@ -60,8 +62,17 @@ if not os.path.exists(args.fastq):
 else:
     fqFile = args.fastq
 
-# Reading Fasta and fastq
-faOut = Fasta(faFile)
+if args.index:
+    bwtindex = open(faFile + '.myindex','w')
+    faOut = Fasta(faFile)
+    for j in faOut.keys():
+        bwtindex.write('>' + j + '\n')
+        bwtindex.write(bwt.bwt(str(faOut[j])) + '\n')
+    bwtindex.close()
+    exit()
+else:
+    # Reading Fasta and fastq
+    faOut = Fasta(faFile)
 # for each in faOut.keys():
 #     print(each)
 #     print(faOut[each])
@@ -89,6 +100,20 @@ bestAlignments = {}
 #     print(faOut[i])
 # exit()
 # For each read, look at each chromsome and find the best score
+
+if args.bwt:
+    # bwtindex = open(faFile + '.myindex','r')
+    faDict = align.alignGenome(faFile + '.myindex')
+    # print(faDict)
+    # exit()
+    for i in fqOut:
+        for j in faDict:
+            # print(fqOut[i])
+            # exit()
+            if bwt.find(faDict[j], fqOut[i][0]) != None:
+                print('found at least 1 exact match')
+    exit()
+
 zenith = open('zenith.txt','w')
 
 # Making the header on zenith
