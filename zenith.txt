@@ -1,5 +1,4 @@
-@SQ	SN:chr1	LN:250	AS:
-@SQ	SN:chr2	LN:250	AS:
+@SQ	SN:chr1	LN:5	AS:
 @HD	VN:1.5	SO:unsorted	GO:query
-@PG\ID:bwamin	PN:bwamin	VN:0.001-alpha	CL:python bwamin.py --mem --bwt -A 1 -B 1 -O 1 -E 1 .\testfastring.fa .\testfqstring.fq
-SRR5077691.212	0	chr2	129	quality	50M	rnext	pnext	tlen	GTCCCTTGGGTATTTTACGTTAGCATCAGGTGGACTAGCATGAATCTTTA	JIIIJJJJIJJJJGJJJIJJJJIJJIJJJJJIJJJJJHHHHHFFFFFCBC
+@PG\ID:bwamin	PN:bwamin	VN:0.001-alpha	CL:python bwamin.py --mem --bwt short.fa short.fq
+Sample1	4	*	0	0	*	*	0	0	TCAT	!1=D
