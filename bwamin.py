@@ -131,17 +131,29 @@ if args.bwt:
             leftpos = bwt.find(faDict[j], fqOut[i][0])
             # if leftpos != None
             if leftpos != None and len(leftpos) == 1:
-                mapq = 0
+                flag = 0
                 pos = leftpos[0]
                 print('found at least 1 exact match')
                 #exact matching only
                 #flag = 0 because not checking reverse
                 #i think leftpos is one off
-                zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), mapq, j, pos, "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+                zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos+1, "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
             else:
-                mapq = 4
-                pos = 0
-                zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), mapq, '*', pos, 0, '*', "*", 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+                #try reverse string
+                leftpos = bwt.find(faDict[j], reversed(fqOut[i][0]))
+                if leftpos != None and len(leftpos) == 1:
+                    flag = 16
+                    pos = leftpos[0]
+                    print('found at least 1 exact match reversed')
+                    #exact matching only
+                    #flag = 0 because not checking reverse
+                    #i think leftpos is one off
+                    zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos+1, "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+                else:
+                    #try the reverse string
+                    flag = 4
+                    pos = 0
+                    zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, '*', pos, 0, '*', "*", 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
     zenith.close()
     exit()
 
