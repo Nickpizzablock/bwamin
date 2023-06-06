@@ -103,18 +103,7 @@ bestAlignments = {}
 # exit()
 # For each read, look at each chromsome and find the best score
 
-if args.bwt:
-    # bwtindex = open(faFile + '.myindex','r')
-    faDict = align.alignGenome(faFile + '.myindex')
-    # print(faDict)
-    # exit()
-    for i in fqOut:
-        for j in faDict:
-            # print(fqOut[i])
-            # exit()
-            if bwt.find(faDict[j], fqOut[i][0]) != None:
-                print('found at least 1 exact match')
-    exit()
+
 
 zenith = open('zenith.txt','w')
 
@@ -127,6 +116,27 @@ command = 'python'
 for i in sys.argv:
     command = command + ' ' + i
 zenith.write(sambuild.pg('bwamin', 'bwamin', '0.001-alpha', command))
+
+if args.bwt:
+    # bwtindex = open(faFile + '.myindex','r')
+    faDict = align.alignGenome(faFile + '.myindex')
+    # print(faDict)
+
+    # exit()
+    for i in fqOut:
+        for j in faDict:
+            # print(fqOut[i])
+            # exit()
+            leftpos = []
+            leftpos = bwt.find(faDict[j], fqOut[i][0])
+            # if leftpos != None
+            if leftpos != None and len(leftpos) == 1:
+                print('found at least 1 exact match')
+                #exact matching only
+                #flag = 0 because not checking reverse
+                zenith.write(sambuild.readToString(i.split(' ', 1)[0], 0, j, leftpos[0], "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+    zenith.close()
+    exit()
 
 # Making the reads list on zenith
 for i in fqOut:

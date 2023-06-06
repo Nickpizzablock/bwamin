@@ -52,6 +52,20 @@ def rebuildbwt(last):
         #     break
     return original
 
+def indexbwt(string):
+    l2f = addl2f(string)
+    # print(l2f)
+    i = 0
+    place = 0
+    index =  [-1 for g in range(len(string))]
+    while True:
+        i = l2f.index(i) # i is now index of first
+        index[i] = place
+        if i == 0:
+            break
+        place += 1
+    return index
+
 def find(bwtstring, w): #w is query
     # print('bwtstring: ' + bwtstring)
     # print('query: ' + w)
@@ -87,7 +101,33 @@ def find(bwtstring, w): #w is query
         offset = top
         # print(top, bottom)
     # return all positions in original string corresponding to first[top,bottom]
-    return first[top:bottom+1]
+    # return first[top:bottom+1] #, top, bottom
+
+    indexes = indexbwt(bwtstring)
+    locals = []
+    for i in range(top,bottom+1):
+        locals.append(indexes[i])
+    return locals
+
+#notmycode
+def bwtBetter(string):
+    #create a list of all cyclic suffixes of t
+    rotation = [string[i:]+string[:i] for i in range(len(string))]
+    #sort the suffixes
+    rotation.sort()
+    #concatenate the last symbol from each suffix
+    return "".join(r[-1] for r in rotation)
+
+# def fmindex():
+
+#notmycode
+def findBetter(p, F, O):
+    lo = 0
+    hi = len(F)
+    for l in reversed(p):
+        lo = O[l] + F[lo][l]
+        hi = O[l] + F[hi][l]
+    return lo, hi
 
 
 # b = input('Transform what?: ')
@@ -98,4 +138,4 @@ def find(bwtstring, w): #w is query
 # # print(e)
 # f = rebuildbwt(c)
 # print(f)
-# print(find(c, 'Q'))
+# print(find(c, 'A'))
