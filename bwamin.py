@@ -131,10 +131,12 @@ if args.bwt:
             leftpos = bwt.find(faDict[j], fqOut[i][0])
             # if leftpos != None
             if leftpos != None and len(leftpos) == 1:
+                matchq = 0
                 print('found at least 1 exact match')
                 #exact matching only
                 #flag = 0 because not checking reverse
-                zenith.write(sambuild.readToString(i.split(' ', 1)[0], 0, j, leftpos[0], "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+                #i think leftpos is one off
+                zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), matchq, j, leftpos[0], "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
     zenith.close()
     exit()
 
