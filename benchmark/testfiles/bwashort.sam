@@ -1,0 +1,3 @@
+@SQ	SN:chr1	LN:5
+@PG	ID:bwa	PN:bwa	VN:0.7.17-r1188	CL:bwa mem benchmark/testfiles/short.fa benchmark/testfiles/short.fq
+Sample1	4	*	0	0	*	*	0	0	TCAT	!1=D	AS:i:0	XS:i:0

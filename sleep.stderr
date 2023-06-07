@@ -1,6 +1,6 @@
 [M::bwa_idx_load_from_disk] read 0 ALT contigs
 [M::process] read 31648 sequences (5063680 bp)...
-[M::mem_process_seqs] Processed 31648 reads in 7.041 CPU sec, 7.062 real sec
-[main] Version: 0.7.17-r1198-dirty
+[M::mem_process_seqs] Processed 31648 reads in 9.082 CPU sec, 9.191 real sec
+[main] Version: 0.7.17-r1188
 [main] CMD: bwa mem benchmark/mydata/SRR10769501.fasta.fixed benchmark/mydata/SRR10769501.fastq
-[main] Real time: 10.469 sec; CPU: 8.311 sec
+[main] Real time: 9.476 sec; CPU: 9.354 sec

@@ -160,8 +160,8 @@ if args.bwt:
             flag = 4
             pos = 0
             zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, '*', pos, 0, '*', "*", 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
-zenith.close()
-exit()
+    zenith.close()
+    exit()
 
 # SW 
 

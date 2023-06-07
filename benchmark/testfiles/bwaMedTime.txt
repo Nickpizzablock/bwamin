@@ -1,3 +1,3 @@
-real	0.024
-user	0.003
-sys	0.012
+real	0.043
+user	0.007
+sys	0.014

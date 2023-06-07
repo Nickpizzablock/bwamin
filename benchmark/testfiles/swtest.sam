@@ -1,7 +1,7 @@
 @SQ	SN:chr1	LN:250	AS:
 @SQ	SN:chr2	LN:250	AS:
 @HD	VN:1.5	SO:unsorted	GO:query
-@PG	ID:bwamin	PN:bwamin	VN:0.001-alpha	CL:python bwamin.py --mem --sw -out benchmark/testfiles/swtest.sam --fa benchmark/testfiles/testfastring.fa --fq benchmark/testfiles/testfqstring.fq
+@PG	ID:bwamin	PN:bwamin	VN:0.001-alpha	CL:python bwamin.py --mem --sw --fa benchmark/testfiles/testfastring.fa --fq benchmark/testfiles/testfqstring.fq -out benchmark/testfiles/swtest.sam
 SRR5077691.13	0	chr2	9	34	8M	*	0	0	NTGAAAAGATGTCTCCTTCTGTAAGTCAGAACAAAAAACTTTAATTAACT	!1=DDFFFHHHHGJJJJJJJJIJJJIIIJIHGIJJJJJJJJJFHHIJIJI
 SRR5077691.79	0	chr1	19	37	11M	*	0	0	GTTTCATTGTGTCTTTATTTCCTGTATTAATGAGATGGGATATGAAGTCT	JJJJJJJIJJIJJJJJJJJIHJJJJJJJJJJJJJJJJHHHHHFFFFF@CB
 SRR5077691.32	0	chr1	26	60	12M	*	0	0	GCCGTGTGCCCCCTCTTGGGTGACACCCCACCCCACCCTTATTTGCATCN	?BBBBBBBBDEEC@@CDFIFFB6A@BIIGGAFFA<FEDFFFFDDBDD=1!
