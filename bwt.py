@@ -143,49 +143,26 @@ def find(bwtstring, query): #w is query
         0 index; List of original string indexes from exact query
     """
     l2f = addl2f(bwtstring)
-    first = sorted(bwtstring)
-
     n = len(bwtstring)
-    # combine = []
-    # for i in range(len(l2f)):
-    #     combine.append([bwtstring[i], l2f[i]]) # index 0 = bwt, 1
     top = 0
     bottom = n - 1
     offset = 0
-    # print(bwtstring[top:bottom])
-    # print(n)
-    for c in query[::-1]:
-        # print(c)
-        # print('look: ' + bwtstring[top:bottom + 1])
-        # exit()
+    for c in query[::-1]:                   # Backwards search
         if c not in bwtstring[top:bottom+ 1]:
-            return None #w does not exist
+            return None                     #w does not exist
+        
+        # Find index of first and last occurance of c
         i = bwtstring[top:bottom+ 1].find(c) + offset
         j = len(bwtstring[top:bottom+ 1]) - 1 - bwtstring[top:bottom+ 1][::-1].find(c) + offset
-        # print(i, j)
-        # print(bwtstring[top:bottom][::-1])
-        # print(l2f)
-        # exit()
+
+        # Get the l2f index from above for first indexes
         top = l2f[i]
         bottom = l2f[j]
         offset = top
-        # print(top, bottom)
-    # return all positions in original string corresponding to first[top,bottom]
-    # return first[top:bottom+1] #, top, bottom
 
+    # Matching first indexes with original string locations
     indexes = indexbwt(bwtstring)
     locals = []
     for i in range(top,bottom+1):
         locals.append(indexes[i])
     return locals
-
-
-# b = input('Transform what?: ')
-# b = "BANANA"
-# c = bwt(b)
-# # e = addl2f(c)
-# # print(c)
-# # print(e)
-# f = rebuildbwt(c)
-# print(f)
-# print(find(c, 'A'))
