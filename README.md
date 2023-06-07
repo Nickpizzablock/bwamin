@@ -99,4 +99,4 @@ If I made any silly mistakes, @ me plz.
 
 <iframe src="https://giphy.com/embed/Fj0MaDHcLycOk" width="480" height="440" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/cat-meow-noodles-Fj0MaDHcLycOk">via GIPHY</a></p>
 
-![cat eating bwamin](https://giphy.com/embed/Fj0MaDHcLycOk.gif)
+![cat eating bwamin](https://media4.giphy.com/media/Fj0MaDHcLycOk/giphy.gif)
