@@ -1,5 +1,5 @@
 # bwamin (CSE185 Project Deno)
-Ramen with a 'bw'. This is an demonstation project which implements an aligner that takes in `.fa `and `.fq` files and aligns them to output a `.sam` file. This program will compete against `bwa index` and `bwa min` seen in class. The bwa Github Repo can be accessed here: https://github.com/lh3/bwa
+Ramen with a 'bw'. This is an demonstation project which implements an aligner that takes in `.fa `and `.fq` files and aligns them to output a `.sam` file. Two algorithms (Burrows-Wheeler Transform and Smith-Waterman Algorithm) are presented with their pros and cons. This program will compete against `bwa index` and `bwa min` seen in class. The bwa Github Repo can be accessed here: https://github.com/lh3/bwa
 
 # Installation Procedure
 Note: Make sure to use `pip3` and `python3` during this process if applicable
@@ -58,7 +58,7 @@ where `testfastring.fa` and `testfqstring.fq` can be replaced with your own `.fa
 This gives the best case found for each read, however this takes a lot of memory.
 This should not be used with large file sizes.
 
-## For Burro-Wheeler options (--bwt)
+## For Burrows-Wheeler options (--bwt)
 Currently, this only checks for exact matches from .fq onto .fa if there is at least one exact match.
 
 This could be used for larger file sizes but limited types of reads.
@@ -80,7 +80,7 @@ Currently, does not support paired end reads on all options. MAPQ is not impleme
 - `--fastq FILE`, `--fq FILE`: a `.fasta` file, reads to search in reference genome
 - `--index`: stores True, enables index mode for `--bwt`
 - `--mem`: stores True, enables mem mode for `--bwt` or `--sw`
-- `--bwt`: stores True, enables Burrow-Wheeler Transform 
+- `--bwt`: stores True, enables Burrows-Wheeler Transform 
 - `--sw`: stores True, enables Smith-Waterman
 - `-A INT`: default 1, matching score
 - `-B INT`: default 4, mismatch penalty
