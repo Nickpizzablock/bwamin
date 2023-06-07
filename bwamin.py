@@ -97,7 +97,6 @@ print('mismatch weight: ' + str(mismatch))
 print('indel weight: ' + str(indel))
 print('gapPenalty: ' + str(gapPenalty))
 
-bestAlignments = {}
 
 # Try output file
 if '.sam' not in args.out:
@@ -121,21 +120,27 @@ zenith.write(sambuild.pg('bwamin', 'bwamin', '0.001-alpha', command))
 # For bwt
 if args.bwt:
     # Read corresponding index for bwt
+    
     faDict = align.alignGenome(faFile + '.myindex')
     for i in fqOut:
+        foundMatch = False
         for j in faDict:
             leftpos = []
+            # leftpos = bwt.find(faDict[j], fqOut[i][0])
             leftpos = bwt.find(faDict[j], fqOut[i][0])
 
             # Perfect match
+            quality = 60
             if leftpos != None and len(leftpos) == 1:
                 flag = 0
                 pos = leftpos[0]
-                print('found at least 1 exact match')
+                # print('found at least 1 exact match')
                 #exact matching only
                 #flag = 0 because not checking reverse
                 #i think leftpos is one off
-                zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos+1, "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+                foundMatch = True
+                zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos, quality, str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+                break
             else:
                 #try reverse string
                 leftpos = bwt.find(faDict[j], fqOut[i][0][::-1])
@@ -144,19 +149,26 @@ if args.bwt:
                 if leftpos != None and len(leftpos) == 1:
                     flag = 16               # bitwise code for reverse
                     pos = leftpos[0] + 1    # +1 to be 1 index
-                    print('found at least 1 exact match reversed')
-                    zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos, "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
-                else:
-                    # Could not find perfect match
-                    flag = 4
-                    pos = 0
-                    zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, '*', pos, 0, '*', "*", 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
-    zenith.close()
-    exit()
+                    # print('found at least 1 exact match reversed')
+                    foundMatch = True
+                    zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos, quality, str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+                    break
+                
+                # Could not find perfect match
+                    
+        if not foundMatch:
+            flag = 4
+            pos = 0
+            zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, '*', pos, 0, '*', "*", 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+zenith.close()
+exit()
 
 # SW 
+
 for i in fqOut:
     # genomeScores = []
+    bestAlignments = {}
+
     for j in faOut.keys():
         # genomeScores.append(align.alignThem(j, i))
         # if align.alignThem((j, faOut[j]), (i, fqOut[i])):
@@ -169,9 +181,15 @@ for i in fqOut:
         if bestAlignments[j][0] > 60:
             bestAlignments[j][0] = 60
         # Note: flag = 0 since only detects reads
-        quality = bestAlignments[j][0]
-        flag = 0 
-        zenith.write(sambuild.readToString(i, flag, j, bestAlignments[j][2], quality, bestAlignments[j][3], '*', 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+        # quality = bestAlignments[j][0]
+    key, highest = align.maxAlignmentDict(bestAlignments)
+    flag = 0
+    quality = highest[0]
+
+    # zenith.write(sambuild.readToString(i, flag, j, bestAlignments[j][2], quality, bestAlignments[j][3], '*', 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+        
+    zenith.write(sambuild.readToString(i.strip(), flag, key, highest[2], quality, highest[3], '*', 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+        
         # zenith.write('hi\thi')
 
         # exit()

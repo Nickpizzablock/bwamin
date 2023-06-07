@@ -78,6 +78,23 @@ def printBackArray(backArray, title):
                 backArray[i][j] = 'x'
         print(backArray[i])
     
+def maxAlignmentDict(align):
+    maxVal = -1 # This could bean issue TODO: -------------------------------------
+    # maxAlign = []
+    # maxPos = -1
+    maxKey = -1
+    for i in align.keys():
+        # print(i[0])
+        if align[i][0] > maxVal:
+            # maxVal = i[0]
+            # maxAlign = i[1]
+            # maxPos = i[2]
+            maxVal = align[i][0]
+            maxKey = i
+    # return [maxVal, maxAlign, maxPos]
+    # print('maxindex; ' + str(i))
+    return maxKey, align[maxKey]
+
 def maxAlignment(align):
     maxVal = -1 # This could bean issue TODO: -------------------------------------
     # maxAlign = []
