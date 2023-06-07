@@ -1,4 +1,4 @@
-# Note how to detect integer or float to string?
+# Header print statements
 def hd(formatVersion, sortingOrder, go):
     return '@HD\tVN:' + str(formatVersion) + '\tSO:' + sortingOrder + '\tGO:' + go + '\n'
 def sq(refName, refLength, refAssembly):
@@ -10,7 +10,7 @@ def pg(programId, programName, programVersion, args):
 def co(text):
     return '@CO' + text + '\n'
 
-#Note  will we need to format something?
+# Reads print statements
 def readToString(readName, flag, refName, leftPos, quality, cigar, nextReadName, nextReadPos, templateLength, seq, qual):
     out = ''
     for i in [readName, str(flag), refName, str(leftPos), str(quality), cigar, nextReadName, str(nextReadPos), str(templateLength), seq]:

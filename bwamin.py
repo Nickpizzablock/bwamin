@@ -2,10 +2,13 @@ import os, argparse, sys
 from pyfaidx import Fasta
 import align, sambuild, bwt
 
-# python bwamin.py --index -A 1 -B 1 -O 1 -E 1 short.fa short.fq > output.txt
-# python bwamin.py --index -A 1 -B 1 -O 1 -E 1 testfastring.fa testfqstring.fq > output.txt
+"""
+Example commands
 
-# python bwamin.py --index --bwt -A 1 -B 1 -O 1 -E 1 .\benchmark\mydata\SRR10769501.fasta.fixed .\benchmark\mydata\SRR10769501.fastq
+python bwamin.py --index -A 1 -B 1 -O 1 -E 1 short.fa short.fq > output.txt
+python bwamin.py --index -A 1 -B 1 -O 1 -E 1 testfastring.fa testfqstring.fq > output.txt
+python bwamin.py --index --bwt -A 1 -B 1 -O 1 -E 1 .\benchmark\mydata\SRR10769501.fasta.fixed .\benchmark\mydata\SRR10769501.fastq
+"""
 
 # Parser
 parser = argparse.ArgumentParser(description='minimum bwa')
@@ -140,7 +143,7 @@ if args.bwt:
                 zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos+1, "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
             else:
                 #try reverse string
-                leftpos = bwt.find(faDict[j], reversed(fqOut[i][0]))
+                leftpos = bwt.find(faDict[j], fqOut[i][0][::-1])
                 if leftpos != None and len(leftpos) == 1:
                     flag = 16
                     pos = leftpos[0]

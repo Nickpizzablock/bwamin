@@ -112,8 +112,8 @@ def indexbwt(string):
     index: [int]
         List of indexes that map first to the original string index
     """
-    if '$' not in last:                     # In case bwt not made  
-        last = bwt(last)
+    if '$' not in string:                     # In case bwt not made  
+        string = bwt(string)
     l2f = addl2f(string)            
     i = 0
     place = 0
