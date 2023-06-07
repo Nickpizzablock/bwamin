@@ -16,8 +16,8 @@ parser = argparse.ArgumentParser(description='minimum bwa')
 # Tool options
 parser.add_argument('--index', action="store_true", help='index a fasta file')
 parser.add_argument('--mem', action="store_true", help='index a fasta file')
-parser.add_argument('--bwt', action="store_true", help='enables bwt search')
-
+parser.add_argument('--bwt', action="store_true", help='enables Burrow-Wheeler Transform search')
+parser.add_argument('--sw', action="store_true", help='enables Smith-Waterman search')
 
 # My options
 parser.add_argument('fasta', type=str, help="fasta input")
@@ -47,14 +47,25 @@ parser.add_argument('-E', type=int,	default=1, help="Gap extension penalty. A ga
 # parser.add_argument('-v', type=int,	default=3, help="Control the verbose level of the output. This option has not been fully supported throughout BWA. Ideally, a value 0 for disabling all the output to stderr; 1 for outputting errors only; 2 for warnings and errors; 3 for all normal messages; 4 or higher for debugging. When this option takes value 4, the output is not SAM. [3] ")
 args = parser.parse_args()
 
-# Check if only 1 option is selected (-h still works here)
+# Check if only 1 option is selected 
 optionsList = [args.index, args.mem]
 if optionsList.count(True) != 1:
-    print('ERROR: Only pick index or mem')
+    print('ERROR: Only pick one: index or mem')
     raise False
 
-# File checking
-# Note: Should I add a .fa and .fq checker? bc txt should be fine
+# Check if only 1 option is selected 
+optionsList = [args.bwt, args.sw]
+if optionsList.count(True) != 1:
+    print('ERROR: Only pick one: bwt or sw')
+    raise False
+
+# sw does not have to be indexed
+optionsList = [args.index, args.sw]
+if optionsList.count(True) == 2:
+    print('ERROR: sw does not require to be indexed: don\'t use index')
+    raise False
+
+# File path checking
 if not os.path.exists(args.fasta):
     print("ERROR: Fasta file invalid")
     raise OSError()
@@ -67,6 +78,7 @@ if not os.path.exists(args.fastq):
 else:
     fqFile = args.fastq
 
+# BWT option
 if args.index and args.bwt:
     bwtindex = open(faFile + '.myindex','w')
     faOut = Fasta(faFile)
@@ -75,18 +87,14 @@ if args.index and args.bwt:
         bwtindex.write(bwt.bwt(str(faOut[j])) + '\n')
     bwtindex.close()
     exit()
+# SW option
 else:
     # Reading Fasta and fastq
     faOut = Fasta(faFile)
-# for each in faOut.keys():
-#     print(each)
-#     print(faOut[each])
 
-# exit()
+# Read the fq file into fqOut
 fqOut = align.sortFqFile(fqFile)
 
-# print(faOut)
-# exit()
 # Stating Alignment settings
 match = args.A
 mismatch = args.B
@@ -97,18 +105,9 @@ print('match weight: ' + str(match))
 print('mismatch weight: ' + str(mismatch))
 print('indel weight: ' + str(indel))
 print('gapPenalty: ' + str(gapPenalty))
-# print(sys.argc)
-# exit()
+
 bestAlignments = {}
-# print(faOut.keys(faOut.keys[0]))
-# for i in faOut.keys():
-#     print(faOut[i])
-# exit()
-# For each read, look at each chromsome and find the best score
-
-
-
-zenith = open('zenith.txt','w')
+zenith = open('zenith.sam','w')
 
 # Making the header on zenith
 # https://samtools.github.io/hts-specs/SAMv1.pdf
@@ -120,19 +119,17 @@ for i in sys.argv:
     command = command + ' ' + i
 zenith.write(sambuild.pg('bwamin', 'bwamin', '0.001-alpha', command))
 
+# For each read, look at each chromsome and find the best score
+# For bwt
 if args.bwt:
-    # bwtindex = open(faFile + '.myindex','r')
+    # Read corresponding index for bwt
     faDict = align.alignGenome(faFile + '.myindex')
-    # print(faDict)
-
-    # exit()
     for i in fqOut:
         for j in faDict:
-            # print(fqOut[i])
-            # exit()
             leftpos = []
             leftpos = bwt.find(faDict[j], fqOut[i][0])
-            # if leftpos != None
+
+            # Perfect match
             if leftpos != None and len(leftpos) == 1:
                 flag = 0
                 pos = leftpos[0]
@@ -144,23 +141,22 @@ if args.bwt:
             else:
                 #try reverse string
                 leftpos = bwt.find(faDict[j], fqOut[i][0][::-1])
+                
+                # Perfect match on reverse
                 if leftpos != None and len(leftpos) == 1:
-                    flag = 16
-                    pos = leftpos[0]
+                    flag = 16               # bitwise code for reverse
+                    pos = leftpos[0] + 1    # +1 to be 1 index
                     print('found at least 1 exact match reversed')
-                    #exact matching only
-                    #flag = 0 because not checking reverse
-                    #i think leftpos is one off
-                    zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos+1, "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+                    zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos, "quality", str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
                 else:
-                    #try the reverse string
+                    # Could not find perfect match
                     flag = 4
                     pos = 0
                     zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, '*', pos, 0, '*', "*", 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
     zenith.close()
     exit()
 
-# Making the reads list on zenith
+# SW 
 for i in fqOut:
     # genomeScores = []
     for j in faOut.keys():
