@@ -47,6 +47,11 @@ parser.add_argument('-E', type=int,	default=1, help="Gap extension penalty. A ga
 # parser.add_argument('-v', type=int,	default=3, help="Control the verbose level of the output. This option has not been fully supported throughout BWA. Ideally, a value 0 for disabling all the output to stderr; 1 for outputting errors only; 2 for warnings and errors; 3 for all normal messages; 4 or higher for debugging. When this option takes value 4, the output is not SAM. [3] ")
 args = parser.parse_args()
 
+# Nothing is selected
+optionsList = [args.index, args.mem, args.bwt, args.sw]
+if optionsList.count(True) == 0:
+    print('Please add arguments. Use -h for help.')
+    raise OSError()
 # Check if only 1 option is selected 
 optionsList = [args.index, args.mem]
 if optionsList.count(True) != 1:
@@ -72,7 +77,7 @@ if not os.path.exists(args.fasta):
 else:
     faFile = args.fasta
 
-if not os.path.exists(args.fastq):
+if args.mem and not os.path.exists(args.fastq):
     print("ERROR: Fastq file invalid")
     raise OSError()
 else:
@@ -181,11 +186,11 @@ for i in fqOut:
 # parser.add_argument("index", type=int, required=True, help="match val")
 # parser.add_argument("mem", type=int, required=True, help="mismatch val")
 zenith.close()
-zenith = open('zenith.txt','r')
-print('----------ZenithFile-----------')
-print(zenith.read())
-print('----------ZenithFile-----------')
+# zenith = open('zenith.txt','r')
+# print('----------ZenithFile-----------')
+# print(zenith.read())
+# print('----------ZenithFile-----------')
 
 
-print(bestAlignments)
-print('hellowaorld')
+# print(bestAlignments)
+# print('hellowaorld')
