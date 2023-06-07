@@ -2,14 +2,6 @@ import os, argparse, sys
 from pyfaidx import Fasta
 import align, sambuild, bwt
 
-"""
-Example commands
-
-python bwamin.py --index -A 1 -B 1 -O 1 -E 1 short.fa short.fq > output.txt
-python bwamin.py --index -A 1 -B 1 -O 1 -E 1 testfastring.fa testfqstring.fq > output.txt
-python bwamin.py --index --bwt -A 1 -B 1 -O 1 -E 1 .\benchmark\mydata\SRR10769501.fasta.fixed .\benchmark\mydata\SRR10769501.fastq
-"""
-
 # Parser
 parser = argparse.ArgumentParser(description='minimum bwa')
 
@@ -31,7 +23,6 @@ parser.add_argument('-E', type=int,	default=1, help="Gap extension penalty. A ga
 
 # Other
 parser.add_argument('-out', type=str, default='zenith', help="Specify output file")
-
 args = parser.parse_args()
 
 # Nothing is selected
@@ -71,6 +62,7 @@ if args.mem and not os.path.exists(args.fastq):
     sys.exit(1)
 else:
     fqFile = args.fastq
+
 
 # BWT option
 if args.index and args.bwt:
@@ -171,8 +163,15 @@ for i in fqOut:
         #     print("there is a match")
         bestAlignments[j] = align.nwAlgo(j, faOut[j], i, fqOut[i], match, mismatch, indel, gapPenalty)
 
-        # Note: flag = 0 since only single reads
-        zenith.write(sambuild.readToString(i, 'flag', j, bestAlignments[j][2], "quality", bestAlignments[j][3], "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1])) # note: you need to put \n
+        # Not using quality score but matching score 
+        if bestAlignments[j][0] < 0:
+            bestAlignments[j][0] = 0
+        if bestAlignments[j][0] > 60:
+            bestAlignments[j][0] = 60
+        # Note: flag = 0 since only detects reads
+        quality = bestAlignments[j][0]
+        flag = 0 
+        zenith.write(sambuild.readToString(i, flag, j, bestAlignments[j][2], quality, bestAlignments[j][3], '*', 0, 0, fqOut[i][0], fqOut[i][1])) # note: you need to put \n
         # zenith.write('hi\thi')
 
         # exit()

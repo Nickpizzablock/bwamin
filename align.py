@@ -3,8 +3,6 @@
 
 # Deprecated - Old .fa parser
 def alignGenome(faFile):
-    print("Enering align.py")
-
     # Reading the faFile to store chr in dict
     genome = {}
     seq = ''
@@ -104,7 +102,10 @@ def stringToCigar(string):
     output = ''
     for i in string:
         if i != lastLetter:
-            output = output + str(counter) + lastLetter
+            if counter != 1:
+                output = output + str(counter) + lastLetter
+            else:
+                output = output + lastLetter
             counter = 1
             lastLetter = i
         else:
@@ -251,6 +252,7 @@ def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
     # printArray(array, 'array')
     # printArray(backArray, 'backarray')
     # printBackArray(backArray, 'backarray')
+    
     return best
     # exit()
 # def align
