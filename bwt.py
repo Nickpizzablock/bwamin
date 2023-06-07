@@ -1,77 +1,147 @@
+# Use more compression align compress to cigar
 import align
-# Use more compression align vcompress to cigar
+
 def bwt(string):
+    """
+    Convert a string to bwa encoded string
+
+    Parameters
+    ----------
+    string: str
+        String to be encoded
+    
+    Returns
+    -------
+    last: str
+        Resultant BWT string
+    """
     bwtlist = []
     string = string + '$'
     last = ''
-    first = ''
-    for i in string:
+    for i in string:                        # Rotating string
         bwtlist.append(string)
         string = string[-1] + string[:-1]
-    bwtlist = sorted(bwtlist)
-    for i in bwtlist:
+    bwtlist = sorted(bwtlist)               # Alphabetical sort
+    for i in bwtlist:                       # Take last char
         last = last + i[-1]
     return last
 
 def bwtEnhanced(string):
+    """
+    Convert a string to compressed bwa encoded string
+
+    Parameters
+    ----------
+    string: str
+        String to be encoded
+    
+    Returns
+    -------
+    align.stringToCigar(string): str
+        Resultant compressed BWT string
+    """
     string = bwt(string)
     return align.stringToCigar(string)
 
-
 def addl2f(last):
+    """
+    Creates L2F (last to first) indexes from BWT string
+
+    Parameters
+    ----------
+    string: str
+        BWT string to be encoded
+    
+    Returns
+    -------
+    l2f: [int]
+        List of ints that correlate to corresponding first index
+    """
+    if '$' not in last:                     # In case bwt not made   
+        last = bwt(last)
     first = sorted(last)
-    l2f = [-1 for i in range(len(first))]
+    l2f = [-1 for i in range(len(first))]   # Allocate array space
     for i in range(len(first)):
         firstLetter = first[i]
-        for j in range(len(last)):
+        for j in range(len(last)):          # xth in first is xth in last
             if firstLetter == last[j] and l2f[j] == -1:
-                l2f[j] = i
+                l2f[j] = i                  # Record corresponding index
                 break
     return l2f
-    # for i in first:
         
 def rebuildbwt(last):
+    """
+    Convert bwa encoded string to a string with $ at end
+
+    Parameters
+    ----------
+    string: str
+        BWT string to get reversed to normal
+    
+    Returns
+    -------
+    original: str
+        Original BWT string
+    """
+    if '$' not in last:                     # In case bwt not made  
+        last = bwt(last)
     l2f = addl2f(last)
-    print(l2f)
     first = sorted(last)
     original = ''
-    i = 0
+    i = 0                                   # i is now index of first
     while True:
-        i = l2f.index(i) # i is now index of first
+        i = l2f.index(i)                    # last to front index
         if i != 0:
-            original += first[i]
+            original += first[i]            # Printing in order
         else:
             original += '$'
             break
-        # for j in range(len(l2f)): # finding i in l2f
-        #     if l2f[j] == i: # found i in l2f
-        #         original = original + first[j] # print the original string
-        #         break
-        # i = j
-        # if i == 0:
-        #     break
     return original
 
 def indexbwt(string):
-    l2f = addl2f(string)
-    # print(l2f)
+    """
+    From bwa encoded string to get indexes of first
+
+    Parameters
+    ----------
+    string: str
+        BWT string to get first indexes
+    
+    Returns
+    -------
+    index: [int]
+        List of indexes that map first to the original string index
+    """
+    if '$' not in last:                     # In case bwt not made  
+        last = bwt(last)
+    l2f = addl2f(string)            
     i = 0
     place = 0
     index =  [-1 for g in range(len(string))]
-    while True:
-        i = l2f.index(i) # i is now index of first
+    while True:                             # Following l2f in order 
+        i = l2f.index(i) 
         index[i] = place
-        if i == 0:
+        if i == 0:                          # Back to beginning
             break
         place += 1
     return index
 
-def find(bwtstring, w): #w is query
-    # print('bwtstring: ' + bwtstring)
-    # print('query: ' + w)
-    
-    # bwtstring = bwtstring + '$'
+def find(bwtstring, query): #w is query
+    """
+    Finds indexes of original string from bwt string and query
 
+    Parameters
+    ----------
+    bwtstring: str
+        BWT string
+    w: string
+        query string inside find
+
+    Returns
+    -------
+    locals: [int]
+        0 index; List of original string indexes from exact query
+    """
     l2f = addl2f(bwtstring)
     first = sorted(bwtstring)
 
@@ -84,7 +154,7 @@ def find(bwtstring, w): #w is query
     offset = 0
     # print(bwtstring[top:bottom])
     # print(n)
-    for c in w[::-1]:
+    for c in query[::-1]:
         # print(c)
         # print('look: ' + bwtstring[top:bottom + 1])
         # exit()
@@ -108,26 +178,6 @@ def find(bwtstring, w): #w is query
     for i in range(top,bottom+1):
         locals.append(indexes[i])
     return locals
-
-#notmycode
-def bwtBetter(string):
-    #create a list of all cyclic suffixes of t
-    rotation = [string[i:]+string[:i] for i in range(len(string))]
-    #sort the suffixes
-    rotation.sort()
-    #concatenate the last symbol from each suffix
-    return "".join(r[-1] for r in rotation)
-
-# def fmindex():
-
-#notmycode
-def findBetter(p, F, O):
-    lo = 0
-    hi = len(F)
-    for l in reversed(p):
-        lo = O[l] + F[lo][l]
-        hi = O[l] + F[hi][l]
-    return lo, hi
 
 
 # b = input('Transform what?: ')
