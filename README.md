@@ -16,7 +16,7 @@ Python can be installed here: https://www.python.org/downloads/
 
 Anaconda can be installed here: https://www.anaconda.com/download 
 
-- Install BWA for benchmarking using conda
+- Install BWA for benchmarking using conda (in mac or linux environment)
 ```
 conda install -c bioconda bwa
 ```
@@ -27,6 +27,11 @@ pip3 install pyfaidx
 
 # For Other OS
 pip install pyfaidx
+```
+- Also get pandas and seaborn to view Jupyter Notebooks
+```
+pip install pandas
+pip install seaborn
 ```
 # Basic Usage
 An example is the following:
@@ -86,6 +91,7 @@ Currently, does not support paired end reads on all options. MAPQ is not impleme
 - `-B INT`: default 4, mismatch penalty
 - `-O INT`: default 6, gap open penalty
 - `-E INT`: default 1, gap extension penalty
+- `-out FILE`: default zenith, specify sam file out
 
 # File Format
 File formats are the same from BWA but in `zenith.sam`. Do not use the `>` symbol for getting the output.
