@@ -20,8 +20,8 @@ parser.add_argument('--bwt', action="store_true", help='enables Burrow-Wheeler T
 parser.add_argument('--sw', action="store_true", help='enables Smith-Waterman search')
 
 # My options
-parser.add_argument('fasta', type=str, help="fasta input")
-parser.add_argument('fastq', type=str, help="fastq input")
+parser.add_argument('--fasta', '--fa', type=str, help="fasta input")
+parser.add_argument('--fastq', '--fq', type=str, help="fastq input")
 
 # Mem options (Found in bwa mem help)
 # parser.add_argument('-t', type=int, default=1, help="number of threads [1]")

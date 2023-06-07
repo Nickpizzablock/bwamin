@@ -1,5 +1,5 @@
 # bwamin (CSE185 Project Deno)
-Ramin with a 'bw'. This is an demonstation project which implements an aligner that takes in `.fa `and `.fq` files and aligns them to output a `.sam` file. This program will compete against `bwa index` and `bwa min` seen in class. The bwa Github Repo can be accessed here: https://github.com/lh3/bwa
+Ramen with a 'bw'. This is an demonstation project which implements an aligner that takes in `.fa `and `.fq` files and aligns them to output a `.sam` file. This program will compete against `bwa index` and `bwa min` seen in class. The bwa Github Repo can be accessed here: https://github.com/lh3/bwa
 
 # Installation Prosedure
 Note: Make sure to use `pip3` and `python3` during this process if applicable
@@ -28,30 +28,49 @@ pip install pyfaidx
 An example is the following:
 ```
 # For Mac
-python3 bwamin.py [options] [.fa] [.fq]
+python3 bwamin.py [options] [--fa ref.fa] [--fq read.fq]
 
 # For Other OS
-python bwamin.py [options] [.fa] [.fq]
+python bwamin.py [options] [--fa ref.fa] [--fq read.fq]
 ```
 
-A test example is:
+To index an `.fasta` file:
 ```
-python3 bwamin.py --index --bwt testfastring.fa testfqstring.fq
+python3 bwamin.py --index --bwt --fa testfastring.fa
+```
+
+Then, to get the `.sam` file:
+```
+python3 bwamin.py --mem --bwt --fa testfastring.fa testfqstring.fq
+or
+python3 bwamin.py --mem --sw --fa testfastring.fa testfqstring.fq
 ```
 where `testfastring.fa` and `testfqstring.fq` can be replaced with your own `.fa` and `.fq` files.
 
-## Note
-Under development. Currently, this only checks for exact matches from .fq onto .fa if there is at least one exact match. Currently, does not support paired end reads. Does not output a `.sam ` file.
+# Limitations
+- For Smith-Waterman options (--sw)
+`--sw` does need to index the file, just go straight to `--mem`.
+
+This gives the best case found for each read, however this takes a lot of memory.
+This should not be used with large file sizes.
+
+- For Burro-Wheeler options (--bwt)
+Currently, this only checks for exact matches from .fq onto .fa if there is at least one exact match.
+
+This could be used for larger file sizes but limited types of reads.
+
+- For all options
+Currently, does not support paired end reads on all options. MAPQ is not implemented well.
+
 
 # Bwamin Options
 ## Note
 Must choose between `--index` or `--mem` but they don't change the output for now.
 
 # File Format
-File formats are DIFFERENT from BWA.
+File formats are the same from BWA but in `zenith.sam`. Do not use the `>` symbol for getting the output.
 
-
-Bwamin outputs a `.sam` file, different from `bwa mem`. The documentation of the file structure can be found [here.](https://samtools.github.io/hts-specs/SAMv1.pdf)
+Bwamin outputs a `.sam` file, different from `bwa mem`. The documentation of the file structure can be found here https://samtools.github.io/hts-specs/SAMv1.pdf
 
 # Contributors
 This repo was made by me, Neo Torres (aka Nickpizzablock). I drew inspiration from `bwa`, `Smith-Waterman`, and `Needleman-Wunsch`.
