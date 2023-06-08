@@ -1,6 +1,12 @@
-[M::bwa_idx_load_from_disk] read 0 ALT contigs
-[M::process] read 31648 sequences (5063680 bp)...
-[M::mem_process_seqs] Processed 31648 reads in 9.082 CPU sec, 9.191 real sec
-[main] Version: 0.7.17-r1188
-[main] CMD: bwa mem benchmark/mydata/SRR10769501.fasta.fixed benchmark/mydata/SRR10769501.fastq
-[main] Real time: 9.476 sec; CPU: 9.354 sec
+Traceback (most recent call last):
+  File "/home/ndtorres/project/bwamin/bwamin.py", line 84, in <module>
+    faOut = Fasta(faFile)
+  File "/home/ndtorres/.local/lib/python3.9/site-packages/pyfaidx/__init__.py", line 1096, in __init__
+    self.faidx = Faidx(
+  File "/home/ndtorres/.local/lib/python3.9/site-packages/pyfaidx/__init__.py", line 511, in __init__
+    self.build_index()
+  File "/home/ndtorres/.local/lib/python3.9/site-packages/pyfaidx/__init__.py", line 691, in build_index
+    raise e
+  File "/home/ndtorres/.local/lib/python3.9/site-packages/pyfaidx/__init__.py", line 674, in build_index
+    raise FastaIndexingError(
+pyfaidx.FastaIndexingError: Line length of fasta file is not consistent! Inconsistent line found in >@SRR10083456.1.1 at line 3.
