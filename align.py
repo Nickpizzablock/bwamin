@@ -201,7 +201,10 @@ def stringToCigar(string):
         else:
             counter += 1
         # lastLetter = i
-    output = output + str(counter) + lastLetter
+    if counter != 1:
+        output = output + str(counter) + lastLetter
+    else:
+        output = output + lastLetter    
     return output
     
 
