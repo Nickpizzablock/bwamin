@@ -162,10 +162,12 @@ if args.bwt:
 for i in fqOut:
     bestAlignments = {}
     for j in faOut.keys():
-        bestAlignments[j] = align.nwAlgo(j, faOut[j], i, fqOut[i], match, mismatch, indel, gapPenalty)
+        bestAlignments[j] = align.betterswalgo(str(faOut[j]), fqOut[i][0], match, mismatch, indel)
+        # bestAlignments[j] = align.nwAlgo(j, faOut[j], i, fqOut[i], match, mismatch, indel, gapPenalty)
 
         # Not using quality score but matching score
         # Score max 60 min 0
+        # bestAlignments[j][0]  = bestAlignments[j][0] #/ len(fqOut[i][0])
         if bestAlignments[j][0] < 0:
             bestAlignments[j][0] = 0
         if bestAlignments[j][0] > 60:

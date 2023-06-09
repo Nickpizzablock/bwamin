@@ -200,15 +200,150 @@ def stringToCigar(string):
             lastLetter = i
         else:
             counter += 1
-        # lastLetter = i
     if counter != 1:
         output = output + str(counter) + lastLetter
     else:
         output = output + lastLetter    
     return output
     
+def betterswalgo(ref, read, match, mismatch, indel, verbose=False):
+    """
+    Smith-Waterman Algorithm
+
+    Parameters
+    ----------
+    ref : str
+        reference string
+    read : str
+        read string
+    match : int
+        value of base match
+    mismatch : int
+        value of base match
+    indel : int
+        value of base gap
+    verbose: bool
+        enable array printing
+    
+    Returns
+    -------
+    alignment: list
+        score: int
+            score of alignment
+        string: list
+            Index[0]: Read string
+            Index[1]: Reference string
+        isave: int
+            left position
+        cigar: str
+            cigar string of alignment
+    """
+    # Prep
+    ref = '-' + ref
+    read = '-' + read
+    array = [[(0) for h in range(len(ref))] for g in range(len(read))]
+    isave = -1
+    jsave = -1
+    maxscore = -1
+
+    # Array
+    for i in range(1,len(read)):
+        for j in range(1,len(ref)):
+            if ref[j] == read[i]:
+                diag = array[i-1][j-1] + match
+            else:
+                diag = array[i-1][j-1] - mismatch
+            up = array[i-1][j] - indel
+            left = array[i][j-1] - indel
+            scores = [diag, up, left, 0]
+            highest = max(scores)
+            array[i][j] = highest
+            if highest > maxscore:
+                maxscore = highest
+                isave = i
+                jsave = j
+  
+    if isave == -1 or jsave == -1:
+        print("arrayproblem")
+        exit()
+
+    if verbose:
+        for i in array:
+            print(i)
+
+    # Backtrack
+    curscore = maxscore
+    string = ['','']
+    cigar = ''
+    while curscore != 0:
+        # Bases match
+        if read[isave] == ref[jsave]:
+            string[0] = read[isave] + string[0]
+            string[1] = ref[jsave] + string[1]
+            isave -= 1
+            jsave -= 1
+            cigar = 'M' + cigar
+        else:
+            top = array[isave-1][jsave]
+            side = array[isave][jsave-1]
+            # Came from above
+            if top > side:
+                string[0] = read[isave] + string[0]
+                string[1] = '-' + string[1]
+                isave -= 1
+                cigar = 'I' + cigar
+            # Came from left
+            # elif top < side:
+            else:
+                string[0] = '-' + string[0]
+                string[1] = ref[jsave] + string[1]
+                jsave -= 1
+                cigar = 'D' + cigar
+            # else:
+            #     print('Unhandled case')
+            #     exit()
+        # Go to value where cur came from
+        curscore = array[isave][jsave]
+
+    cigar = stringToCigar(cigar)
+    return [maxscore, string, isave, cigar]
 
 def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
+    """
+    Smith-Waterman Algorithm
+
+    Parameters
+    ----------
+    chr : str
+        name of reference
+    refStage : str
+        reference string
+    id : str
+        name of read
+    readStage : str
+        read string
+    match : int
+        value of base match
+    mismatch : int
+        value of base match
+    indel : int
+        value of base gap
+    gapPenalty : int
+        additional long gap penalty 
+    
+    Returns
+    -------
+    alignment: list
+        score: int
+            score of alignment
+        string: list
+            Index[0]: Read string
+            Index[1]: Reference string
+        isave: int
+            left position
+        cigar: str
+            cigar string of alignment
+    """
     # Note: read is a tuple, [0] is the letters
     # Set up array
     # print(read[0])
