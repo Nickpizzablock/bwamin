@@ -1,17 +1,28 @@
-# Note: should we have binary compression at least?
-# 
 
-# Deprecated - Old .fa parser
 def alignGenome(faFile):
+    """
+    Parses an input fasta file with sequence name keys and read values
+
+    Parameters
+    ----------
+    faFile: str
+        A .fasta file with names starting with >
+    
+    Returns
+    -------
+    genome: dictionary {str: str}
+        Key: .fasta name (chromosome)
+        Value: Bases following the name
+    """
     # Reading the faFile to store chr in dict
     genome = {}
     seq = ''
     prevLine = ''
     with open(faFile) as reader:
         line = reader.readline()
-        while line != '':                       # Until EOF
+        while line != '':                   # Until EOF
             line = line.strip()
-            if '>' in line:                     # Detect chr, new dict entry
+            if '>' in line:                 # Detect chr, new dict entry
                 line = line.strip('>')
                 if prevLine != '':             
                     genome[prevLine] = seq
@@ -21,48 +32,86 @@ def alignGenome(faFile):
             else:
                 seq = seq + line
             line = reader.readline()
-        genome[prevLine] = seq                  # Fill last dict entry
+        genome[prevLine] = seq              # Fill last dict entry
     return genome
 
 def sortFqFile(fqFile):
+    """
+    Parses an input fastq file with read name keys and corresponding read
+    sequence and base quality score
+
+    Parameters
+    ----------
+    fqFile: str
+        A .fastq file
+    
+    Returns
+    -------
+    reads: dictionary {str:(str, str)}
+        Key: header of read
+        Value: A tuple
+            Index[0]: bases
+            Index[1]: base quality scores
+    """
     reads = {}
     name = ''
     seq = ''
     score = ''
-    seqScore = []
     with open(fqFile) as reader:
         line = reader.readline().strip()
         while line != '':
-
+            # Name
             name = line.strip('@')
             line = reader.readline().strip()
-
+            # Bases
             seq = line
             line = reader.readline()
             line = reader.readline().strip()
-
+            # Quality Score
             score = line
             line = reader.readline()
 
-            # seqScore.append(list(zip(seq, score)))
-            # reads[name] = seqScore
             reads[name] = (seq,score)
-
     return reads
             
-def alignThem(ref, read):
-    for i in range(len(ref[1]) - len(read[1][0]) + 1):
-        if ref[1][i:len(read[1][0])+i] == read[1][0]:
-            return True
-    # print(ref)
-    # print(read)
+# def alignThem(ref, read):
+#     for i in range(len(ref[1]) - len(read[1][0]) + 1):
+#         if ref[1][i:len(read[1][0])+i] == read[1][0]:
+#             return True
+#     # print(ref)
+#     # print(read)
 
 def printArray(array, title):
+    """
+    Prints array made by SW
+
+    Parameters
+    ----------
+    array: list
+        scoring array made by SW
+    
+    Returns
+    -------
+    na
+    """
     print(title)
     for i in range(len(array)):
         print(array[i])
 
 def printBackArray(backArray, title):
+    """
+    Prints and translates backarray made by SW
+
+    Parameters
+    ----------
+    array: list
+        backarray made by SW
+        x: stop, d: up-left, u: up, l: left
+    
+    Returns
+    -------
+    na
+    """
     print(title)
     for i in range(len(backArray)):
         for j in range(len(backArray[i])):
@@ -79,46 +128,70 @@ def printBackArray(backArray, title):
         print(backArray[i])
     
 def maxAlignmentDict(align):
-    maxVal = -1 # This could bean issue TODO: -------------------------------------
-    # maxAlign = []
-    # maxPos = -1
+    """
+    Finds the maximum alignment score in a dictionary at align[i][0]
+
+    Parameters
+    ----------
+    align: dict
+        getting the biggest score at align[i][0]
+    
+    Returns
+    -------
+    maxKey: str
+        key with biggest score
+    align[maxKey]: list
+        content of the maxKey
+    """
+    maxVal = -1
     maxKey = -1
     for i in align.keys():
-        # print(i[0])
         if align[i][0] > maxVal:
-            # maxVal = i[0]
-            # maxAlign = i[1]
-            # maxPos = i[2]
             maxVal = align[i][0]
             maxKey = i
-    # return [maxVal, maxAlign, maxPos]
-    # print('maxindex; ' + str(i))
     return maxKey, align[maxKey]
 
 def maxAlignment(align):
-    maxVal = -1 # This could bean issue TODO: -------------------------------------
-    # maxAlign = []
-    # maxPos = -1
+    """
+    Finds the maximum alignment score in a list at align[i][0]
+
+    Parameters
+    ----------
+    align: dict
+        getting the biggest score at align[i][0]
+    
+    Returns
+    -------
+    align[maxIndex]: list
+        content of highest score
+    """
+    maxVal = -1 
     maxIndex = -1
     for i in range(len(align)):
-        # print(i[0])
         if align[i][0] > maxVal:
-            # maxVal = i[0]
-            # maxAlign = i[1]
-            # maxPos = i[2]
             maxVal = align[i][0]
             maxIndex = i
-    # return [maxVal, maxAlign, maxPos]
-    # print('maxindex; ' + str(i))
     return align[maxIndex]
 
 def stringToCigar(string):
-    #Note: do we need to consider ref and read deletions
+    """
+    Makes a cigar from string
+
+    Parameters
+    ----------
+    string: str
+        Sequence of letters to convert
+    
+    Returns
+    -------
+    output: str
+        Cigar sequence
+    """
     lastLetter = string[0]
     counter = 0
     output = ''
     for i in string:
-        if i != lastLetter:
+        if i != lastLetter: 
             if counter != 1:
                 output = output + str(counter) + lastLetter
             else:
@@ -127,12 +200,150 @@ def stringToCigar(string):
             lastLetter = i
         else:
             counter += 1
-        # lastLetter = i
-    output = output + str(counter) + lastLetter
+    if counter != 1:
+        output = output + str(counter) + lastLetter
+    else:
+        output = output + lastLetter    
     return output
     
+def betterswalgo(ref, read, match, mismatch, indel, verbose=False):
+    """
+    Smith-Waterman Algorithm
+
+    Parameters
+    ----------
+    ref : str
+        reference string
+    read : str
+        read string
+    match : int
+        value of base match
+    mismatch : int
+        value of base match
+    indel : int
+        value of base gap
+    verbose: bool
+        enable array printing
+    
+    Returns
+    -------
+    alignment: list
+        score: int
+            score of alignment
+        string: list
+            Index[0]: Read string
+            Index[1]: Reference string
+        isave: int
+            left position
+        cigar: str
+            cigar string of alignment
+    """
+    # Prep
+    ref = '-' + ref
+    read = '-' + read
+    array = [[(0) for h in range(len(ref))] for g in range(len(read))]
+    isave = -1
+    jsave = -1
+    maxscore = -1
+
+    # Array
+    for i in range(1,len(read)):
+        for j in range(1,len(ref)):
+            if ref[j] == read[i]:
+                diag = array[i-1][j-1] + match
+            else:
+                diag = array[i-1][j-1] - mismatch
+            up = array[i-1][j] - indel
+            left = array[i][j-1] - indel
+            scores = [diag, up, left, 0]
+            highest = max(scores)
+            array[i][j] = highest
+            if highest > maxscore:
+                maxscore = highest
+                isave = i
+                jsave = j
+  
+    if isave == -1 or jsave == -1:
+        print("arrayproblem")
+        exit()
+
+    if verbose:
+        for i in array:
+            print(i)
+
+    # Backtrack
+    curscore = maxscore
+    string = ['','']
+    cigar = ''
+    while curscore != 0:
+        # Bases match
+        if read[isave] == ref[jsave]:
+            string[0] = read[isave] + string[0]
+            string[1] = ref[jsave] + string[1]
+            isave -= 1
+            jsave -= 1
+            cigar = 'M' + cigar
+        else:
+            top = array[isave-1][jsave]
+            side = array[isave][jsave-1]
+            # Came from above
+            if top > side:
+                string[0] = read[isave] + string[0]
+                string[1] = '-' + string[1]
+                isave -= 1
+                cigar = 'I' + cigar
+            # Came from left
+            # elif top < side:
+            else:
+                string[0] = '-' + string[0]
+                string[1] = ref[jsave] + string[1]
+                jsave -= 1
+                cigar = 'D' + cigar
+            # else:
+            #     print('Unhandled case')
+            #     exit()
+        # Go to value where cur came from
+        curscore = array[isave][jsave]
+
+    cigar = stringToCigar(cigar)
+    return [maxscore, string, isave, cigar]
 
 def nwAlgo(chr, refStage, id, readStage, match, mismatch, indel, gapPenalty):
+    """
+    Smith-Waterman Algorithm
+
+    Parameters
+    ----------
+    chr : str
+        name of reference
+    refStage : str
+        reference string
+    id : str
+        name of read
+    readStage : str
+        read string
+    match : int
+        value of base match
+    mismatch : int
+        value of base match
+    indel : int
+        value of base gap
+    gapPenalty : int
+        additional long gap penalty 
+    
+    Returns
+    -------
+    alignment: list
+        score: int
+            score of alignment
+        string: list
+            Index[0]: Read string
+            Index[1]: Reference string
+        isave: int
+            left position
+        cigar: str
+            cigar string of alignment
+    """
     # Note: read is a tuple, [0] is the letters
     # Set up array
     # print(read[0])
