@@ -1,0 +1,5 @@
+/bin/bash: line 1:   336 Killed                  python bwamin.py --mem --sw --fa benchmark/mydata/SRR10083456.fasta --fq benchmark/mydata/SRR10083456.fastq -out swebola.sam 2> sleep.stderr
+
+real	6m42.095s
+user	6m0.771s
+sys	0m40.291s
