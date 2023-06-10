@@ -131,7 +131,7 @@ if args.bwt:
             quality = 60
             if leftpos != None and len(leftpos) == 1:
                 flag = 0
-                pos = leftpos[0] + 1
+                pos = leftpos[0]
                 
                 # Exact matching only
                 # flag = 0 because not checking reverse
@@ -146,7 +146,7 @@ if args.bwt:
                 # Perfect match on reverse
                 if leftpos != None and len(leftpos) == 1:
                     flag = 16               # bitwise code for reverse
-                    pos = leftpos[0] + 1    # +1 to be 1 index
+                    pos = leftpos[0]
                     foundMatch = True
                     zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos, quality, str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1]))
                     break
