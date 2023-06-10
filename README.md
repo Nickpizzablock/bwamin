@@ -31,16 +31,13 @@ Anaconda can be installed here: https://www.anaconda.com/download
 conda install -c bioconda bwa
 conda install -c bioconda pyfaidx
 ```
-- Use IGV
-
-It can be downloaded here:
-
-or just use the webapp. Anyways, the screenshots will be in the notebook.
 
 - Also get pandas and seaborn to view Jupyter Notebooks
 ```
 pip install pandas
 pip install seaborn
+pip install matplotlib
+pip install numpy
 ```
 
 ## Basic Usage
@@ -65,6 +62,13 @@ or
 python3 bwamin.py --mem --sw --fa testfastring.fa testfqstring.fq
 ```
 where `testfastring.fa` and `testfqstring.fq` can be replaced with your own `.fa` and `.fq` files.
+
+
+Open the Jupyter Notebook `Benchmark.ipynb` for the benchmarking code and results.
+`Analysis.ipynb` looks at the resultant samfiles and compares them.
+
+NOTE: The cell where BWA uses `GRCm38.chr17.fa` will not work. Github would not let me include it.
+If you want to run, please download the file on the class Datahub located at `~/public/lab5/GRCm38.chr17.fa` and place it in `bwamin/benchmark/classExample`.
 
 ## Limitations
 ### For Smith-Waterman options (--sw)
@@ -107,6 +111,21 @@ Currently, does not support paired end reads on all options. MAPQ is not impleme
 File formats are the same from BWA but in `zenith.sam`. Do not use the `>` symbol for getting the output.
 
 Bwamin outputs a `.sam` file, different from `bwa mem`. The documentation of the file structure can be found here https://samtools.github.io/hts-specs/SAMv1.pdf
+
+### Directory
+- bwamin.py: the main code
+- align.py: mainly used with the Smith-Waterman algorithm
+- bwt.py: mainly used with the Burrows-Wheeler algorithm
+- fixfastapy: just for me to get SRA fasta file to run with pyfaidx
+- sambuild.py: easy print functions to make writing to sams easier
+- stress.py: DEPRECATED an attempt to make a binary encoding but failed
+- zenith.sam: default output file 
+- benchmark/: where all the test files and benchmark files live
+- benchmark/classExample: Lab 5 mouse
+- benchmark/data: DEPRECATED old useless data
+- benchmark/ecoli: Ecoli samples
+- benchmark/mydata: Ebola samples
+- benchmark/testfiles: made up files
 
 ## Contributors
 This repo was made by me, Neo Torres (aka Nickpizzablock). I drew inspiration from `bwa`, `Smith-Waterman`, and `Needleman-Wunsch`.
