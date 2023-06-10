@@ -1,0 +1,2 @@
+@HD	VN:1.5	SO:unsorted	GO:query
+@PG	ID:bwa	PN:bwa	VN:0.7.17-r1198-dirty	CL:bwa mem benchmark/ecoli/ERR10419847.fasta.small.fixed benchmark/ecoli/ERR10419847.fastq

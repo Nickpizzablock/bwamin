@@ -131,13 +131,13 @@ if args.bwt:
             quality = 60
             if leftpos != None and len(leftpos) == 1:
                 flag = 0
-                pos = leftpos[0]
+                pos = leftpos[0] + 1
                 
                 # Exact matching only
                 # flag = 0 because not checking reverse
                 # Pos by 0-index
                 foundMatch = True
-                zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos, quality, str(len(fqOut[i][0])) + 'M', "rnext", "pnext", "tlen", fqOut[i][0], fqOut[i][1]))
+                zenith.write(sambuild.readToString(i.split(' ', 1)[0].strip(), flag, j, pos, quality, str(len(fqOut[i][0])) + 'M', "*", 0, 0, fqOut[i][0], fqOut[i][1]))
                 break
             else:
                 #try reverse string

@@ -7,6 +7,6 @@ Traceback (most recent call last):
     self.build_index()
   File "/home/ndtorres/.local/lib/python3.9/site-packages/pyfaidx/__init__.py", line 691, in build_index
     raise e
-  File "/home/ndtorres/.local/lib/python3.9/site-packages/pyfaidx/__init__.py", line 674, in build_index
+  File "/home/ndtorres/.local/lib/python3.9/site-packages/pyfaidx/__init__.py", line 660, in build_index
     raise FastaIndexingError(
-pyfaidx.FastaIndexingError: Line length of fasta file is not consistent! Inconsistent line found in >@SRR10083456.1.1 at line 3.
+pyfaidx.FastaIndexingError: The FASTA file benchmark/ecoli/ERR10419847.fasta.small.fixed does not contain a valid sequence. Check that sequence definition lines start with '>'.
