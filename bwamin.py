@@ -162,7 +162,10 @@ if args.bwt:
 for i in fqOut:
     bestAlignments = {}
     for j in faOut.keys():
+        # New Algorithm (memory efficient)
         bestAlignments[j] = align.betterswalgo(str(faOut[j]), fqOut[i][0], match, mismatch, indel)
+
+        # Old Algorithm
         # bestAlignments[j] = align.nwAlgo(j, faOut[j], i, fqOut[i], match, mismatch, indel, gapPenalty)
 
         # Not using quality score but matching score
